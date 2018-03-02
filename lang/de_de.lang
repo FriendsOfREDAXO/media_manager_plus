@@ -1,0 +1,21 @@
+media_manager_plus_title = Media Manager Plus
+
+#subpage groups
+media_manager_plus_groups = Gruppen
+media_manager_plus_groups_norowsmessage = Es wurden keine Gruppen gefunden
+
+media_manager_plus_groups_action_edit = Gruppe bearbeiten
+media_manager_plus_groups_action_delete = Gruppe löschen
+media_manager_plus_groups_action_delete_success = Gruppe erfolgreich gelöscht
+
+media_manager_plus_groups_column_name = Name
+media_manager_plus_groups_column_functions = Funktionen
+
+media_manager_plus_groups_formcaption_add = Gruppe hinzufügen
+media_manager_plus_groups_formcaption_edit = Gruppe editieren
+
+media_manager_plus_groups_label_name = Name
+
+#permissions
+perm_general_media_manager_plus[] = Rechte für Media Manager Plus-Addon
+perm_general_media_manager_plus[groups] = Rechte für die Seite 'Gruppen' des Media Manager Neu-Addons
