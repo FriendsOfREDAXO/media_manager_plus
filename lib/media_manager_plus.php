@@ -1,32 +1,33 @@
 <?php
 	class media_manager_plus {
 		
-		/*
-		public static function backgroundImage($selector, $mediatype, $filename) {
-			$mediaQueries = [];
-			$mediaQueries['(max-width: 375px)'] = 'XS';
-			$mediaQueries['(min-width: 376px) and (max-width: 750px)'] = 'S';
-			$mediaQueries['(min-width: 751px) and (max-width: 1024px)'] = 'M';
-			$mediaQueries['(min-width: 1025px)'] = 'L';
+		public static function generateBackgroundImage($selector, $mediatype, $filename, $filenamesByBreakpoint = []) {
+			//Start - define filename by breakpoint
+				$filenames = [];
+				foreach (self::getBreakpoints() as $breakpoint => $mediaquery) {
+					if (in_array($breakpoint, $filenamesByBreakpoint)) {
+						$filenames[$breakpoint] = $filenamesByBreakpoint[$breakpoint];
+					} else {
+						$filenames[$breakpoint] = $filename;
+					}
+				}
+			//End - define filename by breakpoint
 			
 			$str = '';
-			foreach ($mediaQueries as $mediaQuery => $size) {
-				$str .= '@media only screen and '.$mediaQuery.' and (-webkit-min-device-pixel-ratio: 1), only screen and (min--moz-device-pixel-ratio: 1), only screen and '.$mediaQuery.' and (-o-min-device-pixel-ratio: 1/1), only screen and '.$mediaQuery.' and (min-device-pixel-ratio: 1), only screen and '.$mediaQuery.' and (min-resolution: 96dpi), only screen and '.$mediaQuery.' and (min-resolution: 1dppx) {'.PHP_EOL;
-				$str .= '  '.$selector.' {'.PHP_EOL;
-				$str .= '    background-image:url(index.php?rex_media_type='.$mediatype.$size.'@1x&rex_media_file='.$filename.');'.PHP_EOL;
-				$str .= '  }'.PHP_EOL;
-				$str .= '}'.PHP_EOL;
-				$str .= '@media only screen and '.$mediaQuery.' and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and '.$mediaQuery.' and (-o-min-device-pixel-ratio: 2/1), only screen and '.$mediaQuery.' and (min-device-pixel-ratio: 2), only screen and '.$mediaQuery.' and (min-resolution: 192dpi), only screen and '.$mediaQuery.' and (min-resolution: 2dppx) {'.PHP_EOL;
-				$str .= '  '.$selector.' {'.PHP_EOL;
-				$str .= '    background-image:url(index.php?rex_media_type='.$mediatype.$size.'@2x&rex_media_file='.$filename.');'.PHP_EOL;
-				$str .= '  }'.PHP_EOL;
-				$str .= '}'.PHP_EOL;
-			}
-			return $str;
-		}*/
-		
-		public static function generateBackgroundImage($mediatype, $filename, $filenamesByBreakpoint) {
 			
+			foreach (self::getBreakpoints() as $breakpoint => $mediaquery) {
+				foreach (self::getResolutions() as $resolution => $factor) {
+					if ($resolution == 'lazy') continue;
+					
+					$str .= '@media only screen and '.$mediaquery.' and (-webkit-min-device-pixel-ratio: '.intval($factor).'), only screen and (min--moz-device-pixel-ratio: '.intval($factor).'), only screen and '.$mediaquery.' and (-o-min-device-pixel-ratio: '.intval($factor).'/1), only screen and '.$mediaquery.' and (min-device-pixel-ratio: '.intval($factor).'), only screen and '.$mediaquery.' and (min-resolution: '.intval($factor * 96).'dpi), only screen and '.$mediaquery.' and (min-resolution: '.intval($factor).'dppx) {'.PHP_EOL;
+					$str .= '  '.$selector.' {'.PHP_EOL;
+					$str .= '    background-image:url(index.php?rex_media_type='.$mediatype.'-'.$breakpoint.'@'.$resolution.'&rex_media_file='.$filenames[$breakpoint].');'.PHP_EOL;
+					$str .= '  }'.PHP_EOL;
+					$str .= '}'.PHP_EOL;
+				}
+			}
+			
+			return $str;
 		}
 		
 		public static function generatePictureTag($mediatype, $filename, $filenamesByBreakpoint = [], $lazyload = true) {
@@ -53,7 +54,9 @@
 					//Start - generate srcset
 						$str .= 'srcset="';
 						foreach (self::getResolutions() as $resolution => $factor) {
-							if ($resolution == 'lazy') continue;
+							if ($resolution == 'lazy') {
+								continue;
+							}
 							
 							$str .= 'index.php?rex_media_type='.$mediatype.'-'.$breakpoint.'@'.$resolution.'&rex_media_file='.$filenames[$breakpoint].' '.$resolution.',';
 						}
@@ -73,9 +76,12 @@
 					//End - generate srcset
 					
 					//Start - generate data-srcset
-						$str .= 'data-srcset="';
+						$str .= ' data-srcset="';
 						foreach (self::getResolutions() as $resolution => $factor) {
-							if ($resolution == 'lazy') continue;
+							if ($resolution == 'lazy') {
+								$defaultImg = 'index.php?rex_media_type='.$mediatype.'-'.$breakpoint.'@'.$resolution.'&rex_media_file='.$filenames[$breakpoint];
+								continue;
+							}
 							
 							$str .= 'index.php?rex_media_type='.$mediatype.'-'.$breakpoint.'@'.$resolution.'&rex_media_file='.$filenames[$breakpoint].' '.$resolution.',';
 						}
