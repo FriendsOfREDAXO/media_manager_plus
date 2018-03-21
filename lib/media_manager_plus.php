@@ -100,13 +100,13 @@
 		}
 		
 		public static function getBreakpoints() {
-			return [
-				'XS' => '(max-width: 375px)',
-				'S' => '(min-width: 376px) and (max-width: 750px)',
-				'M' => '(min-width: 751px) and (max-width: 1024px)',
-				'L' => '(min-width: 1025px) and (max-width: 1300px)',
-				'XL' => '(min-width: 1301px)'
-			];
+			$sql = rex_sql::factory();
+			$breakpoints = $sql->getArray("SELECT name, mediaquery FROM `".rex::getTablePrefix()."media_manager_plus_breakpoints` ORDER BY `name` ASC");
+			unset($sql);
+			
+			$breakpointsCombined = array_combine(array_column($breakpoints, 'name'), array_column($breakpoints, 'mediaquery'));
+			
+			return $breakpointsCombined;
 		}
 		
 		public static function getResolutions() {
