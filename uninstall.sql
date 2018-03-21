@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS `%TABLE_PREFIX%media_manager_plus_breakpoints`;
