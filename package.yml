@@ -10,3 +10,4 @@ page:
     icon: rex-icon rex-icon-media
     subpages:
         groups: { title: 'translate:groups', perm: media_manager_plus[groups] }
+        breakpoints: { title: 'translate:breakpoints', perm: media_manager_plus[breakpoints] }
