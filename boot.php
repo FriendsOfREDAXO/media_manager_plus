@@ -50,8 +50,6 @@
 					if (!empty($formParams['effects'])) {
 						media_manager_plus::generateEffectForGroup($formParams['type_id']);
 					}
-					
-					rex_response::sendRedirect(rex_url::backendPage('media_manager_plus/groups'));
 				break;
 			}
 		});
