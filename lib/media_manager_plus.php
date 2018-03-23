@@ -79,7 +79,6 @@
 						$str .= ' data-srcset="';
 						foreach (self::getResolutions() as $resolution => $factor) {
 							if ($resolution == 'lazy') {
-								$defaultImg = 'index.php?rex_media_type='.$mediatype.'-'.$breakpoint.'@'.$resolution.'&rex_media_file='.$filenames[$breakpoint];
 								continue;
 							}
 							
@@ -92,7 +91,7 @@
 				}
 			}
 			
-			$str .= '	<img '.(($lazyload) ? 'class="lazyload"' : '').' src="'.$defaultImg.'" alt="'.addslashes(rex_media::get($filename)->getTitle()).'">'.PHP_EOL;
+			$str .= '	<img '.(($lazyload) ? 'class="lazyload"' : '').' src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="'.addslashes(rex_media::get($filename)->getTitle()).'">'.PHP_EOL;
 			
 			$str .= '</picture>'.PHP_EOL;
 			
