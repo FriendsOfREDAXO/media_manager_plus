@@ -74,7 +74,18 @@
 				
 				//Start - reroute mediamanager-urls
 					$subject = str_replace('href="index.php?page=media_manager/types"', 'href="index.php?page=media_manager_plus/groups"', $subject);
+					$subject = str_replace('href="index.php?page=media_manager/overview"', 'href="index.php?page=packages&subpage=help&package=media_manager_plus"', $subject);
 				//End - reroute mediamanager-urls
+				
+				if (rex_request::get('page') == 'media_manager/types') {
+					$subject = str_replace('>Mediatypen bearbeiten<', '>'.$this->i18n('groups').'<', $subject);
+				}
+				
+				if (rex_request::get('page') == 'media_manager/types' && rex_request::get('effects') == '1') {
+					//Start - change h1
+						$subject = preg_replace('/<h1>Media Manager[^<]*<\/h1>/', '<h1>Media Manager Plus</h1>', $subject);
+					//End - change h1
+				}
 				
 				if (rex_request::get('page') == 'media_manager/types' && rex_request::get('effects') == '1' && rex_request::get('func') == 'edit') {
 					//Start - hide deletebutton
