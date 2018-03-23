@@ -73,7 +73,7 @@
 				//End - hide mediamanager in navigation
 				
 				//Start - reroute mediamanager-urls
-					$subject = str_replace('<a href="index.php?page=media_manager/types">', '<a href="index.php?page=media_manager_plus/groups">', $subject);
+					$subject = str_replace('href="index.php?page=media_manager/types"', 'href="index.php?page=media_manager_plus/groups"', $subject);
 				//End - reroute mediamanager-urls
 				
 				if (rex_request::get('page') == 'media_manager/types' && rex_request::get('effects') == '1' && rex_request::get('func') == 'edit') {
