@@ -11,3 +11,6 @@ page:
     subpages:
         groups: { title: 'translate:groups', perm: media_manager_plus[groups] }
         breakpoints: { title: 'translate:breakpoints', perm: media_manager_plus[breakpoints] }
+
+requires:
+    redaxo: '>=5.1.0'
