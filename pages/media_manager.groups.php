@@ -36,7 +36,7 @@
 	}
 
 	if ($func == '') {
-		$list = rex_list::factory("SELECT `id`, `name`, `group` FROM `".rex::getTablePrefix()."media_manager_type` WHERE `status` = 0 AND `group` = 0 AND subgroup = 0 ORDER BY `name` ASC", 100);
+		$list = rex_list::factory("SELECT `id`, `name`, `group` FROM `".rex::getTablePrefix()."media_manager_type` WHERE `description` = 'generated' AND `group` = 0 AND subgroup = 0 ORDER BY `name` ASC", 100);
 		$list->addTableAttribute('class', 'table-striped');
 		$list->setNoRowsMessage($this->i18n('groups_norowsmessage'));
 
@@ -184,6 +184,10 @@
 			$field = $form->addTextField('name');
 			$field->setLabel($this->i18n('groups_label_name'));
 		//End - add name-field
+		
+		//Start - add description-field
+			$field = $form->addHiddenField('description', 'generated');
+		//End - add description-field
 		
 		if ($func == 'edit') {
 			$form->addParam('group_id', $group_id);

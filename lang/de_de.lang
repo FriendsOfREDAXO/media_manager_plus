@@ -1,4 +1,5 @@
-media_manager_plus_title = Media Manager Plus
+#subpage types
+media_manager_plus_singletypes = Typen
 
 
 #subpage groups
@@ -34,5 +35,6 @@ media_manager_plus_breakpoints_label_mediaquery = Mediaquery
 
 #permissions
 perm_general_media_manager_plus[] = Rechte für Media Manager Plus-Addon
+perm_general_media_manager_plus[singletypes] = Rechte für die Seite 'Typen' des Media Manager Plus-Addons
 perm_general_media_manager_plus[groups] = Rechte für die Seite 'Gruppen' des Media Manager Plus-Addons
 perm_general_media_manager_plus[breakpoints] = Rechte für die Seite 'Breakpoints' des Media Manager Plus-Addons

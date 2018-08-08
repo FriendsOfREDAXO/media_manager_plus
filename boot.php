@@ -5,7 +5,7 @@
 			$formParams = $params['form']->getParams();
 			
 			switch ($formParams['page']) {
-				case 'media_manager_plus/groups':
+				case 'media_manager/groups':
 					switch ($params['form']->isEditMode()) {
 						case '0': //add
 							$group_id = $params['sql']->getLastId();
@@ -47,54 +47,70 @@
 					}
 				break;
 				case 'media_manager/types':
-					if (!empty($formParams['effects'])) {
-						media_manager_plus::generateEffectForGroup($formParams['type_id']);
+					if (media_manager_plus::isGroup($formParams['type_id'])) {
+						if (!empty($formParams['effects'])) {
+							if (media_manager_plus::isGroup($formParams['type_id'])) {
+								media_manager_plus::generateEffectForGroup($formParams['type_id']);
+							}
+						}
+					} else {
+						rex_response::sendRedirect(rex_url::backendPage('media_manager/singletypes'));
 					}
 				break;
 			}
 		});
 		
 		//Start - inject media_manager
-			if (rex_request::get('page') == 'media_manager/types' && rex_request::get('effects') == '1' && rex_request::get('func') == 'delete') {
-				rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) {
-					$type_id = rex_request::get('type_id');
-					media_manager_plus::generateEffectForGroup($type_id);
-					
-					rex_response::sendRedirect(rex_url::backendPage('media_manager_plus/groups'));
+			if (rex_request::get('page') == 'media_manager/types' && rex_request::get('func') == 'copy' && rex_request::get('type_id') != '0') {
+				rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) { //todo: not the best EP, but it works
+					rex_response::sendRedirect(rex_url::backendPage('media_manager/singletypes'));
 				}, rex_extension::LATE);
 			}
 			
-			rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) {
-				$subject = $ep->getSubject();
-				
-				//Start - hide mediamanager in navigation
-					$subject = str_replace('<li id="rex-navi-page-media-manager" class="rex-has-icon"><a href="index.php?page=media_manager/types"><i class="rex-icon rex-icon-media"></i> Media Manager</a></li>', '', $subject);
-					$subject = str_replace('<li id="rex-navi-page-media-manager" class="active rex-has-icon"><a href="index.php?page=media_manager/types"><i class="rex-icon rex-icon-media"></i> Media Manager</a></li>', '', $subject);
-				//End - hide mediamanager in navigation
-				
-				//Start - reroute mediamanager-urls
-					$subject = str_replace('href="index.php?page=media_manager/types"', 'href="index.php?page=media_manager_plus/groups"', $subject);
-					$subject = str_replace('href="index.php?page=media_manager/overview"', 'href="index.php?page=packages&subpage=help&package=media_manager_plus"', $subject);
-				//End - reroute mediamanager-urls
-				
-				if (rex_request::get('page') == 'media_manager/types') {
-					$subject = str_replace('>Mediatypen bearbeiten<', '>'.$this->i18n('groups').'<', $subject);
-				}
-				
-				if (rex_request::get('page') == 'media_manager/types' && rex_request::get('effects') == '1') {
-					//Start - change h1
-						$subject = preg_replace('/<h1>Media Manager[^<]*<\/h1>/', '<h1>Media Manager Plus</h1>', $subject);
-					//End - change h1
-				}
-				
-				if (rex_request::get('page') == 'media_manager/types' && rex_request::get('effects') == '1' && rex_request::get('func') == 'edit') {
-					//Start - hide deletebutton
-						$subject = preg_replace('/<button id="rex-media-manager-type-effect-[^-]*-delete"[^>]*>[^<]*<\/button>/', '', $subject);
-					//End - hide deletebutton
-				}
-				
-				$ep->setSubject($subject);
-			}, rex_extension::EARLY);
+			if (rex_request::get('page') == 'media_manager/types' && rex_request::get('func') == 'delete_cache' && rex_request::get('type_id') != '0') {
+				rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) { //todo: not the best EP, but it works
+					rex_response::sendRedirect(rex_url::backendPage('media_manager/singletypes'));
+				}, rex_extension::LATE);
+			}
+			
+			if (rex_request::get('page') == 'media_manager/types' && rex_request::get('func') == 'delete' && rex_request::get('type_id') != '') {
+				rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) { //todo: not the best EP, but it works
+					rex_response::sendRedirect(rex_url::backendPage('media_manager/singletypes'));
+				}, rex_extension::LATE);
+			}
+			
+			if (rex_request::get('page') == 'media_manager/types' && rex_request::get('effects') == '1' && rex_request::get('func') == 'delete') {
+				rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) { //todo: not the best EP, but it works
+					$type_id = rex_request::get('type_id');
+					if (media_manager_plus::isGroup($type_id)) {
+						media_manager_plus::generateEffectForGroup($type_id);
+						rex_response::sendRedirect(rex_url::backendPage('media_manager/groups'));
+					} else {
+						rex_response::sendRedirect(rex_url::backendPage('media_manager/singletypes'));
+					}
+				}, rex_extension::EARLY);
+			}
 		//End - inject media_manager
+		
+		rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) {
+			$subject = $ep->getSubject();
+			
+			//Start - remove page-tab
+				$subject = str_replace('<li><a href="index.php?page=media_manager/types">'.rex_i18n::msg('media_manager_subpage_types').'</a></li>', '', $subject);
+				$subject = str_replace('<li class="active "><a href="index.php?page=media_manager/types">'.rex_i18n::msg('media_manager_subpage_types').'</a></li>', '', $subject);
+			//End - remove page-tab
+			
+			//Start - remove backbutton
+				$subject = str_replace('<a class="btn btn-back" href="index.php?page=media_manager/types">'.rex_i18n::msg('media_manager_back').'</a>', '', $subject);
+			//End - remove backbutton
+			
+			//Start - remove deletebutton
+				if (rex_request::get('page') == 'media_manager/types' && rex_request::get('effects') == '1' && rex_request::get('func') == 'edit' && media_manager_plus::isGroup(rex_request::get('type_id'))) {
+					$subject = preg_replace('/<button id="rex-media-manager-type-effect-[^-]*-delete"[^>]*>[^<]*<\/button>/', '', $subject);
+				}
+			//End - remove deletebutton
+				
+			$ep->setSubject($subject);
+		}, rex_extension::EARLY);
 	}
 ?>

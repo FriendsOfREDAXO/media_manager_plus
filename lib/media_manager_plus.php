@@ -117,6 +117,20 @@
 			];
 		}
 		
+		public static function isGroup($type_id) {
+			$sql = rex_sql::factory();
+			$type = $sql->getArray('SELECT * FROM `'.rex::getTablePrefix().'media_manager_type` WHERE `id` = ?', [$type_id]);
+			unset($sql);
+			
+			if (!empty($type[0])) {
+				if ($type[0]['group'] != '0' || $type[0]['description'] == 'generated') {
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
 		public static function generateEffectForGroup($group_id) {
 			$sql = rex_sql::factory();
 			
@@ -136,7 +150,7 @@
 								//End - delete all effects for this type
 								
 								//Start - get all effects for this type's parent
-									$effects = $sql->getArray('SELECT * FROM `'.rex::getTablePrefix().'media_manager_type_effect` WHERE `type_id` = ?', [$group_id]);
+									$effects = $sql->getArray('SELECT * FROM `'.rex::getTablePrefix().'media_manager_type_effect` WHERE `type_id` = ? ORDER BY `priority` ASC', [$group_id]);
 									if (!empty($effects)) {
 										foreach ($effects as $effect) {
 											$parameters = json_decode($effect['parameters'], true);
