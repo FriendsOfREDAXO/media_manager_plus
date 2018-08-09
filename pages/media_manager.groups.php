@@ -25,6 +25,35 @@
 			
 			$func = '';
 		break;
+		case 'copyEffects':
+			$from = rex_request('from', 'int');
+			$to = rex_request('to', 'int');
+			
+			$sql = rex_sql::factory();
+			
+			//Start - get all types in this group
+				$fromTypes = $sql->getArray("SELECT `id` FROM `".rex::getTablePrefix()."media_manager_type` WHERE `subgroup` = ? ORDER BY `id` ASC", [$from]);
+				$toTypes = $sql->getArray("SELECT `id` FROM `".rex::getTablePrefix()."media_manager_type` WHERE `subgroup` = ? ORDER BY `id` ASC", [$to]);
+				
+				if (count($fromTypes) == count($toTypes)) {
+					foreach ($fromTypes as $index => $fromType) {
+						//Start - get all effects of this type
+							$effects = $sql->getArray("SELECT * FROM `".rex::getTablePrefix()."media_manager_type_effect` WHERE `type_id` = ? ORDER BY `priority` ASC", [$fromType['id']]);
+							foreach ($effects as $effect) {
+								$sql->setQuery("INSERT INTO `".rex::getTablePrefix()."media_manager_type_effect` (`type_id`, `effect`, `parameters`, `priority`, `updatedate`, `updateuser`, `createdate`, `createuser`) VALUES (?,?,?,?,NOW(),?,NOW(),?)", [$toTypes[$index]['id'], $effect['effect'], $effect['parameters'], $effect['priority'], $effect['updateuser'], $effect['createuser']]);
+							}
+						//End - get all effects of this type
+					}
+				} else {
+					die('Fehler: Unterschiedliche anzahl breakpoints');
+				}
+				
+			//End - get all types in this group
+			
+			unset($sql);
+			
+			$func = '';
+		break;
 	}
 	
 	if ($success != '') {
@@ -54,7 +83,7 @@
 			$name .= $list->getValue('name');
 			$name .= '<span class="btn-group-xs">';
 			$name .= '  <a href="'.$list->getUrl(['func' => 'edit', 'group_id' => $list->getValue('id')]).'" class="btn btn-edit" title="editieren"><i class="rex-icon rex-icon-edit"></i></a>';
-			$name .= '  <a href="'.$list->getUrl(['func' => 'delete', 'group_id' => $list->getValue('id')]).'" class="btn btn-delete" title="löschen" data-confirm="Block löschen?"><i class="rex-icon rex-icon-delete"></i></a>';
+			$name .= '  <a href="'.$list->getUrl(['func' => 'delete', 'group_id' => $list->getValue('id')]).'" class="btn btn-delete" title="'.$this->i18n('groups_action_delete').'" data-confirm="'.$this->i18n('groups_action_delete').'?"><i class="rex-icon rex-icon-delete"></i></a>';
 			$name .= '</span>';
 			$name .= '</strong>';
 			
@@ -81,7 +110,9 @@
 						$groupsByResolutions = $sql->getArray('SELECT * FROM `'.rex::getTablePrefix().'media_manager_type` WHERE `subgroup` = ?', [$groupsByBreakpoint['id']]);
 						if (!empty($groupsByResolutions)) {
 							$name .= '<ul class="list-group">';
-							foreach ($groupsByResolutions as $groupsByResolution) {
+							foreach ($groupsByResolutions as $groupsByResolutionIndex => $groupsByResolution) {
+								$hasEffects = false;
+								
 								$name .= '<li class="list-group-item">';
 								$name .= $groupsByResolution['name'];
 								
@@ -136,6 +167,17 @@
 								//End - get effects for this type
 								
 								$name .= '</li>';
+								if (empty($effects) && $groupsByResolutionIndex == (count($groupsByResolutions) - 1)) {
+									$name .= '<li class="list-group-item">';
+									$name .= '<div class="btn-toolbar">';
+									foreach ($groupsByBreakpoints as $groupsByBreakpointSubround) {
+										if ($groupsByBreakpointSubround['name'] == $groupsByBreakpoint['name']) continue;
+										$name .= '	<a href="'.rex_url::backendPage('media_manager/'.rex_be_controller::getCurrentPagePart(2), ['func' => 'copyEffects', 'from' => $groupsByBreakpointSubround['id'], 'to' => $groupsByBreakpoint['id']]).'" class="btn btn-update">Ãœbernehmen von '.$groupsByBreakpointSubround['name'].'</a>';
+									}
+									$name .= '</div>';
+									
+									$name .= '</li>';
+								}
 							}
 							
 							$name .= '</ul>';
