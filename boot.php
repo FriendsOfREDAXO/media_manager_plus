@@ -109,6 +109,10 @@
 					$subject = preg_replace('/<button id="rex-media-manager-type-effect-[^-]*-delete"[^>]*>[^<]*<\/button>/', '', $subject);
 				}
 			//End - remove deletebutton
+			
+			//Start - reroute navigation
+				$subject = str_replace('<a href="index.php?page=media_manager/types"><i class="rex-icon rex-icon-media"></i> Media Manager</a>', '<a href="index.php?page=media_manager/overview"><i class="rex-icon rex-icon-media"></i> Media Manager</a>', $subject);
+			//End - reroute navigation
 				
 			$ep->setSubject($subject);
 		}, rex_extension::EARLY);
