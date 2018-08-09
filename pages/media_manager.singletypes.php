@@ -2,7 +2,7 @@
 	$func = rex_request('func', 'string');
 	
 	if ($func == '') {
-		$list = rex_list::factory("SELECT `id`, `name`, `description`, `status` FROM `".rex::getTablePrefix()."media_manager_type` WHERE `description` != 'generated' AND `group` = 0 AND `subgroup` = 0 ORDER BY `status` ASC, `name` ASC");
+		$list = rex_list::factory("SELECT `id`, `name`, `description`, `status` FROM `".rex::getTablePrefix()."media_manager_type` WHERE `description` NOT LIKE 'generated%' AND `group` = 0 AND `subgroup` = 0 ORDER BY `status` ASC, `name` ASC");
 		$list->addTableAttribute('class', 'table-striped');
 		$list->setNoRowsMessage(rex_i18n::msg('media_manager_type_no_types'));
 		
