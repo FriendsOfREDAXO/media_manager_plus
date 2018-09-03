@@ -32,8 +32,8 @@
 			$sql = rex_sql::factory();
 			
 			//Start - get all types in this group
-				$fromTypes = $sql->getArray("SELECT `id` FROM `".rex::getTablePrefix()."media_manager_type` WHERE `subgroup` = ? ORDER BY `id` ASC", [$from]);
-				$toTypes = $sql->getArray("SELECT `id` FROM `".rex::getTablePrefix()."media_manager_type` WHERE `subgroup` = ? ORDER BY `id` ASC", [$to]);
+				$fromTypes = $sql->getArray("SELECT `id` FROM `".rex::getTablePrefix()."media_manager_type` WHERE `subgroup` = ? or `id` = ? ORDER BY `id` ASC", [$from, $from]);
+				$toTypes = $sql->getArray("SELECT `id` FROM `".rex::getTablePrefix()."media_manager_type` WHERE `subgroup` = ? or `id` = ? ORDER BY `id` ASC", [$to, $to]);
 				
 				if (count($fromTypes) == count($toTypes)) {
 					foreach ($fromTypes as $index => $fromType) {
