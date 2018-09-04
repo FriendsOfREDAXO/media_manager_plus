@@ -13,7 +13,7 @@ class mmp_effekte {
      * @param int $from
      * @param int $to
      */
-    public static function duplicate(int $from, int $to) {
+    public static function duplicate($from, $to) {
         $sql = rex_sql::factory();
 
         $fromTypes = $sql->getArray("SELECT `id` FROM `".rex::getTablePrefix()."media_manager_type` WHERE `subgroup` = ? or id = ? ORDER BY `id` ASC", [$from, $from]);
@@ -37,7 +37,7 @@ class mmp_effekte {
      * @param int $id
      * @return mixed
      */
-    public static function getEffectsByTypeId(int $id) {
+    public static function getEffectsByTypeId($id) {
         return rex_sql::factory()->getArray("SELECT * FROM `".rex::getTablePrefix()."media_manager_type_effect` WHERE `type_id` = ? ORDER BY `priority` ASC", [$id]);
     }
 
@@ -51,7 +51,7 @@ class mmp_effekte {
      * @param $createuser
      * @return boolean
      */
-    public static function add(int $type_id, $effect, $parameters, $priority, $updateuser, $createuser) {
+    public static function add($type_id, $effect, $parameters, $priority, $updateuser, $createuser) {
         $sql = rex_sql::factory();
         $sql->setTable(rex::getTablePrefix().'media_manager_type_effect')
             ->setValue('type_id', $type_id)
@@ -73,7 +73,7 @@ class mmp_effekte {
      * löscht eine Gruppe anhand
      * @param int $group_id
      */
-    public static function deleteByGroupId(int $group_id) {
+    public static function deleteByGroupId($group_id) {
         $sql = rex_sql::factory();
 
         $types = $sql->getArray("SELECT `id` FROM `".rex::getTablePrefix()."media_manager_type` WHERE `group` = ?", [$group_id]);
