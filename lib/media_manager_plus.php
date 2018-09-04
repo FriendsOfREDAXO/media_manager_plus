@@ -157,7 +157,7 @@
 											
 											if (!empty($parameters['rex_effect_'.$effect['effect']])) {
 												foreach ($parameters['rex_effect_'.$effect['effect']] as $key => $value) {
-													if (strpos($key, 'height') !== false || strpos($key, 'width') !== false && is_numeric($value)) {
+													if ((strpos($key, 'height') !== false || strpos($key, 'width') !== false && is_numeric($value)) && $value !== '') {
 														$parameters['rex_effect_'.$effect['effect']][$key] = $value * $factor;
 													}
 												}
