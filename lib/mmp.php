@@ -72,4 +72,12 @@ class mmp {
     public static function base_url($withoutfolder = false) {
         return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != '' ? 'https' : 'http').'://'.$_SERVER['SERVER_NAME'].($withoutfolder == false ? rex_url::frontend() : '');
     }
+
+    public function rewrite($filename, $type) {
+        if(class_exists('mm_autorewrite')) {
+            return mm_autorewrite::rewrite($filename, $type);
+        } else {
+            return 'index.php?rex_media_type='.$type.'&rex_media_file='.$filename;
+        }
+    }
 }
