@@ -13,6 +13,9 @@ pages:
     media_manager/breakpoints:
         title: 'translate:breakpoints'
         perm: media_manager_plus[breakpoints]
+    media_manager/help:
+        title: 'translate:readme'
+        perm: media_manager_plus[readme]
 
 requires:
     redaxo: '>=5.1.0'
