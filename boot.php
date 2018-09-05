@@ -47,11 +47,9 @@
 					}
 				break;
 				case 'media_manager/types':
-					if (media_manager_plus::isGroup($formParams['type_id'])) {
+					if (media_manager_plus_backend::isGroup($formParams['type_id'])) {
 						if (!empty($formParams['effects'])) {
-							if (media_manager_plus::isGroup($formParams['type_id'])) {
-								media_manager_plus::generateEffectForGroup($formParams['type_id']);
-							}
+							media_manager_plus_backend::generateEffectForGroup($formParams['type_id']);
 						}
 					} else {
 						rex_response::sendRedirect(rex_url::backendPage('media_manager/singletypes'));
@@ -82,8 +80,8 @@
 			if (rex_request::get('page') == 'media_manager/types' && rex_request::get('effects') == '1' && rex_request::get('func') == 'delete') {
 				rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) { //todo: not the best EP, but it works
 					$type_id = rex_request::get('type_id');
-					if (media_manager_plus::isGroup($type_id)) {
-						media_manager_plus::generateEffectForGroup($type_id);
+					if (media_manager_plus_backend::isGroup($type_id)) {
+						media_manager_plus_backend::generateEffectForGroup($type_id);
 						rex_response::sendRedirect(rex_url::backendPage('media_manager/groups'));
 					} else {
 						rex_response::sendRedirect(rex_url::backendPage('media_manager/singletypes'));
@@ -105,7 +103,7 @@
 			//End - remove backbutton
 			
 			//Start - remove deletebutton
-				if (rex_request::get('page') == 'media_manager/types' && rex_request::get('effects') == '1' && rex_request::get('func') == 'edit' && media_manager_plus::isGroup(rex_request::get('type_id'))) {
+				if (rex_request::get('page') == 'media_manager/types' && rex_request::get('effects') == '1' && rex_request::get('func') == 'edit' && media_manager_plus_backend::isGroup(rex_request::get('type_id'))) {
 					$subject = preg_replace('/<button id="rex-media-manager-type-effect-[^-]*-delete"[^>]*>[^<]*<\/button>/', '', $subject);
 				}
 			//End - remove deletebutton
