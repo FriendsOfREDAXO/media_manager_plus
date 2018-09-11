@@ -44,6 +44,7 @@
 			$defaultImg = rex_url::media($filename);
 			
 			$str = '';
+			$str  = rex_extension::registerPoint(new rex_extension_point('MMP_BEFORE_PICTURETAG', $str, ['mediatype' => $mediatype, 'filename' => $filename, 'filenamesByBreakpoint' => $filenamesByBreakpoint, 'lazyload' => boolval($lazyload)]));
 			$str .= '<picture>'.PHP_EOL;
 			
 			if (!$lazyload) {
@@ -89,10 +90,20 @@
 					$str .= '">'.PHP_EOL;
 				}
 			}
+			$class = [];
+			if($lazyload) $classes[] = 'lazyload';
+
+            $classes = rex_extension::registerPoint(new rex_extension_point('MMP_IMG_CLASS', $classes, ['mediatype' => $mediatype, 'filename' => $filename, 'filenamesByBreakpoint' => $filenamesByBreakpoint, 'lazyload' => boolval($lazyload)]));
 			
-			$str .= '	<img '.(($lazyload) ? 'class="lazyload"' : '').' src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="'.addslashes(rex_media::get($filename)->getTitle()).'">'.PHP_EOL;
+			$imgtag = '	<img '.(sizeof($classes) > 0 ? 'class="'.implode(' ', $classes).'"' : '').' src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="'.addslashes(rex_media::get($filename)->getTitle()).'">'.PHP_EOL;
+
+			$imgtag = rex_extension::registerPoint(new rex_extension_point('MMP_IMGTAG', $imgtag, ['mediatype' => $mediatype, 'filename' => $filename, 'filenamesByBreakpoint' => $filenamesByBreakpoint, 'lazyload' => boolval($lazyload)]));
+
+			$str .= $imgtag;
 			
 			$str .= '</picture>'.PHP_EOL;
+
+            $str  = rex_extension::registerPoint(new rex_extension_point('MMP_AFTER_PICTURETAG', $str, ['mediatype' => $mediatype, 'filename' => $filename, 'filenamesByBreakpoint' => $filenamesByBreakpoint, 'lazyload' => boolval($lazyload)]));
 			
 			return $str;
 		}
