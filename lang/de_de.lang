@@ -32,6 +32,7 @@ media_manager_plus_breakpoints_formcaption_edit = Breakpoint editieren
 media_manager_plus_breakpoints_label_name = Name
 media_manager_plus_breakpoints_label_mediaquery = Mediaquery
 
+media_manager_plus_readme = Media Manager Plus Hilfe
 
 #permissions
 perm_general_media_manager_plus[] = Rechte für Media Manager Plus-Addon
