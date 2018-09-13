@@ -23,7 +23,10 @@ Es besteht die möglichkeit über die statischen PHP Methoden die Ausgaben autom
 
 Liefert einen komplett fertigen picture Tag aus, inkl. der source Angaben, jeweiligen Pixel Ratio größen sowie der Breakpoints.
 
-`<?php echo media_manager_plus_frontend::generatePictureTag('bildTyp', 'image.jpg'); ?>` 
+`<?php echo media_manager_plus_frontend::generatePictureTag('bildTyp', 'image.jpg'); ?>`
+ 
+alternative
+`<?php echo mmp::generatePictureTag('bildTyp', 'image.jpg'); ?>`
 
 ## Extension Points
 Für die eigene Anpassung von Ausgaben, existieren folgende Extension Points

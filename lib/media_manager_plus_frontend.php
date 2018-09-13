@@ -108,4 +108,6 @@
 			return $str;
 		}
 	}
+
+	class_alias('media_manager_plus_frontend', 'mmp');
 ?>
