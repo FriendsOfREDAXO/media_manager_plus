@@ -12,4 +12,3 @@
 function mmp_generatePictureTag($mediatype, $filename, $filenamesByBreakPoint = [], $lazyload = true) {
     return mmp::generatePictureTag($mediatype, $filename, $filenamesByBreakPoint, $lazyload);
 }
-
