@@ -25,8 +25,13 @@ Liefert einen komplett fertigen picture Tag aus, inkl. der source Angaben, jewei
 
 `<?php echo media_manager_plus_frontend::generatePictureTag('bildTyp', 'image.jpg'); ?>`
  
-alternative
-`<?php echo mmp::generatePictureTag('bildTyp', 'image.jpg'); ?>`
+alternativen
+```
+<?php 
+echo mmp::generatePictureTag('bildTyp', 'image.jpg');
+echo mmp_generatePictureTag(bildTyp', 'image.jpg');
+?>
+```
 
 ## Extension Points
 Für die eigene Anpassung von Ausgaben, existieren folgende Extension Points

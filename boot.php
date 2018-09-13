@@ -1,4 +1,6 @@
 <?php
+    require_once __DIR__ . '/functions/function_media_manager_plus.php';
+
 	if (rex::isBackend()) {
 		rex_extension::register('REX_FORM_SAVED', function (rex_extension_point $ep) {
 			$params = $ep->getParams();
