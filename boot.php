@@ -117,4 +117,7 @@
 			$ep->setSubject($subject);
 		}, rex_extension::EARLY);
 	}
+
+
+class_alias('media_manager_plus_frontend', 'mmp');
 ?>
