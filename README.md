@@ -29,7 +29,6 @@ alternativen
 ```
 <?php 
 echo mmp::generatePictureTag('bildTyp', 'image.jpg');
-echo mmp_generatePictureTag(bildTyp', 'image.jpg');
 ?>
 ```
 
