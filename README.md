@@ -21,14 +21,14 @@ für ein Bild zu hinterlegen. Somit besteht die möglichkeit verschiedene Auflö
 Es besteht die möglichkeit über die statischen PHP Methoden die Ausgaben automatisch im passenden Format zurück zu geben.
 
 
-Liefert einen komplett fertigen picture Tag aus, inkl. der source Angaben, jeweiligen Pixel Ratio größen sowie der Breakpoints.
+Liefert einen komplett fertigen picture Tag aus, inkl. der source Angaben, jeweiligen Pixel-Ratio-Größen sowie der Breakpoints.
 ```
 <?php
 echo media_manager_plus_frontend::generatePictureTag('bildTyp', 'image.jpg');
 ?>
 ```
  
-alternativen
+oder alternativ:
 ```
 <?php 
 echo mmp::generatePictureTag('bildTyp', 'image.jpg');
@@ -43,15 +43,15 @@ Für die eigene Anpassung von Ausgaben, existieren folgende Extension Points
 - MMP_IMG_CLASS
 - MMP_IMGTAG
 
-### MP_BEFORE_PICTURE_TAG
+### MMP_BEFORE_PICTURETAG
 Ermöglicht vor dem Picture Tag eigene Ausgaben zu gestalten. Es stehen in dem EP folgende Angaben zur Verfügung:
 - mediatype
 - filename
 - filenamesByBreakpoint
 - lazyload
 
-### MMP_AFTER_PICTURE_TAG
-Ermöglicht nach dem Picture Tag eigene Ausgaben zu gestalten. Es stehen die gleichen Parameter zur Verfügung wie bei MMP_BEFORE_PICTURE_TAG
+### MMP_AFTER_PICTURETAG
+Ermöglicht nach dem Picture Tag eigene Ausgaben zu gestalten. Es stehen die gleichen Parameter zur Verfügung wie bei MMP_BEFORE_PICTURETAG
 
 ### MMP_IMG_CLASS
 Setzen von eigenen CSS Klassen auf dem IMG Tag. Dies ist wie folgt möglich:
