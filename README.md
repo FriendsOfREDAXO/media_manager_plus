@@ -40,17 +40,17 @@ Für die eigene Anpassung von Ausgaben, existieren folgende Extension Points
 - MMP_IMG_CLASS
 - MMP_IMGTAG
 
-#####MMP_BEFORE_PICTURE_TAG
+### MP_BEFORE_PICTURE_TAG
 Ermöglicht vor dem Picture Tag eigene Ausgaben zu gestalten. Es stehen in dem EP folgende Angaben zur Verfügung:
 - mediatype
 - filename
 - filenamesByBreakpoint
 - lazyload
 
-#####MMP_AFTER_PICTURE_TAG
+### MMP_AFTER_PICTURE_TAG
 Ermöglicht nach dem Picture Tag eigene Ausgaben zu gestalten. Es stehen die gleichen Parameter zur Verfügung wie bei MMP_BEFORE_PICTURE_TAG
 
-#####MMP_IMG_CLASS
+### MMP_IMG_CLASS
 Setzen von eigenen CSS Klassen auf dem IMG Tag. Dies ist wie folgt möglich
 
 ######Registierung EP
@@ -63,7 +63,7 @@ rex_extension::register('MMP_IMG_CLASS', function(rex_extension_point $ep) {
 }, rex_extension::LATE);
 ```
 
-######Ausgabe eines Bild mit eigener CSS Klasse
+### Ausgabe eines Bild mit eigener CSS Klasse
 
 ```
 class beispiel {
@@ -82,12 +82,12 @@ beispiel::setClass(['class-1', 'class-2', 'class-3'])
 media_manager_plus_frontend::generatePictureTag('eigenerTyp', 'bild.jpg');
 ```
 
-#####MMP_IMGTAG
+### MMP_IMGTAG
 ermöglicht eine eigene Ausgabe von dem tag "IMG". Es stehen die Parameter `mediatype`, `filename`, `filenamesByBreakpoint` und `lazyload` zur verfügung.
 
 ## Requirements
 
-##### Optional
+### Optional
 Das FOR-AddOn gestaltet die URL Ausgaben benutzerfreundlich 
 * [MM Autorewrite](https://github.com/FriendsOfREDAXO/media_manager_autorewrite)
 
