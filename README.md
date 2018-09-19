@@ -51,9 +51,7 @@ Ermöglicht vor dem Picture Tag eigene Ausgaben zu gestalten. Es stehen in dem E
 Ermöglicht nach dem Picture Tag eigene Ausgaben zu gestalten. Es stehen die gleichen Parameter zur Verfügung wie bei MMP_BEFORE_PICTURE_TAG
 
 ### MMP_IMG_CLASS
-Setzen von eigenen CSS Klassen auf dem IMG Tag. Dies ist wie folgt möglich
-
-######Registierung EP
+Setzen von eigenen CSS Klassen auf dem IMG Tag. Dies ist wie folgt möglich:
 
 ```
 rex_extension::register('MMP_IMG_CLASS', function(rex_extension_point $ep) {
