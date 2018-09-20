@@ -1,8 +1,9 @@
 # Media Manager Plus
 
 Ermöglicht das Gruppieren von Media-Manager-Typen und stellt eine Frontend-API (PictureTag) bereit.
-Das AddOn erweitert den Media Manager von Redaxo. Es ist mit dem Media Manager Plus möglich, verschiedene Breakpoints
-für ein Bild zu hinterlegen. Somit besteht die möglichkeit verschiedene Auflösungen von Bildern zur Verfügung zu stellen.
+Das AddOn erweitert den Media Manager von REDAXO. Es ist mit dem Media Manager Plus möglich, verschiedene Breakpoints
+für ein Bild zu hinterlegen. Somit besteht die Möglichkeit, verschiedene Auflösungen von Bildern zur Verfügung zu stellen.
+
 
 ## Features
 
@@ -13,50 +14,55 @@ für ein Bild zu hinterlegen. Somit besteht die möglichkeit verschiedene Auflö
 
 ## Installation
 
-1. Über Installer laden oder ZIP-Datei im AddOn-Ordner entpacken, der Ordner muss „media_manager_plus“ heißen.
+1. Über Installer laden oder ZIP-Datei im AddOn-Ordner entpacken, der Ordner muss `media_manager_plus` heißen.
 2. AddOn installieren und aktivieren
 
-## Verwendung
-### Verwendung von Bildausgaben
-Es besteht die möglichkeit über die statischen PHP Methoden die Ausgaben automatisch im passenden Format zurück zu geben.
 
+## Verwendung
+
+### Verwendung von Bildausgaben
+
+Es besteht die Möglichkeit, über die statischen PHP-Methoden die Ausgaben automatisch im passenden Format zurückzugeben.
 
 Liefert einen komplett fertigen picture Tag aus, inkl. der source Angaben, jeweiligen Pixel-Ratio-Größen sowie der Breakpoints.
-```
-<?php
+
+```php
 echo media_manager_plus_frontend::generatePictureTag('bildTyp', 'image.jpg');
-?>
 ```
  
 oder alternativ:
-```
-<?php 
+
+```php
 echo mmp::generatePictureTag('bildTyp', 'image.jpg');
-?>
 ```
 
 ## Extension Points
+
 Für die eigene Anpassung von Ausgaben, existieren folgende Extension Points
 
-- MMP_BEFORE_PICTURETAG
-- MMP_AFTER_PICTURETAG
-- MMP_IMG_CLASS
-- MMP_IMGTAG
+- `MMP_BEFORE_PICTURETAG`
+- `MMP_AFTER_PICTURETAG`
+- `MMP_IMG_CLASS`
+- `MMP_IMGTAG`
 
-### MMP_BEFORE_PICTURETAG
+### `MMP_BEFORE_PICTURETAG`
+
 Ermöglicht vor dem Picture Tag eigene Ausgaben zu gestalten. Es stehen in dem EP folgende Angaben zur Verfügung:
-- mediatype
-- filename
-- filenamesByBreakpoint
-- lazyload
 
-### MMP_AFTER_PICTURETAG
-Ermöglicht nach dem Picture Tag eigene Ausgaben zu gestalten. Es stehen die gleichen Parameter zur Verfügung wie bei MMP_BEFORE_PICTURETAG
+- `mediatype`
+- `filename`
+- `filenamesByBreakpoint`
+- `lazyload
 
-### MMP_IMG_CLASS
+### `MMP_AFTER_PICTURETAG`
+
+Ermöglicht nach dem Picture Tag eigene Ausgaben zu gestalten. Es stehen die gleichen Parameter zur Verfügung wie bei `MMP_BEFORE_PICTURETAG`
+
+### `MMP_IMG_CLASS`
+
 Setzen von eigenen CSS Klassen auf dem IMG Tag. Dies ist wie folgt möglich:
 
-```
+```php
 rex_extension::register('MMP_IMG_CLASS', function(rex_extension_point $ep) {
     $classes = $ep->getSubject();
     $classes = array_merge(beispiel::getClass(), $classes);
@@ -64,7 +70,7 @@ rex_extension::register('MMP_IMG_CLASS', function(rex_extension_point $ep) {
 }, rex_extension::LATE);
 ```
 
-### Ausgabe eines Bild mit eigener CSS Klasse
+### Ausgabe eines Bild mit eigener CSS-Klasse
 
 ```
 class beispiel {
@@ -83,13 +89,16 @@ beispiel::setClass(['class-1', 'class-2', 'class-3'])
 media_manager_plus_frontend::generatePictureTag('eigenerTyp', 'bild.jpg');
 ```
 
-### MMP_IMGTAG
+### `MMP_IMGTAG`
+
 ermöglicht eine eigene Ausgabe von dem tag "IMG". Es stehen die Parameter `mediatype`, `filename`, `filenamesByBreakpoint` und `lazyload` zur verfügung.
 
 ## Requirements
 
 ### Optional
+
 Das FOR-AddOn gestaltet die URL Ausgaben benutzerfreundlich 
+
 * [MM Autorewrite](https://github.com/FriendsOfREDAXO/media_manager_autorewrite)
 
 ## Bugtracker
