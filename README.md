@@ -72,7 +72,7 @@ rex_extension::register('MMP_IMG_CLASS', function(rex_extension_point $ep) {
 
 ### Ausgabe eines Bild mit eigener CSS-Klasse
 
-```
+```php
 class beispiel {
    private static $bildClasses = [];
    
