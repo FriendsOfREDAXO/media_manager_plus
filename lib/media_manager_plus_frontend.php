@@ -89,7 +89,7 @@
 					$str .= '">'.PHP_EOL;
 				}
 			}
-			$class = [];
+			$classes = [];
 			$imgtag = '';
 			
 			if ($lazyload) $classes[] = 'lazyload';
