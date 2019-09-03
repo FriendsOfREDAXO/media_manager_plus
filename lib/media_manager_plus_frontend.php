@@ -129,6 +129,7 @@
 
 					$imgSrcSet = $imgSrcLazy;
 
+					$imgLazySrcSet = '';
 					$imgLazySrcSet .= ' data-srcset="';
 					$imgLazySrcSet .= $imgSrcSetPath;
 					$imgLazySrcSet .= '"'.PHP_EOL;
