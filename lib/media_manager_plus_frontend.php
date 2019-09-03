@@ -48,6 +48,8 @@
 			
 			if (!$lazyload) {
 				foreach (self::getBreakpoints() as $breakpoint => $mediaquery) {
+					if ($breakpoint == 'fallback') continue;
+					
 					$str .= '<source media="'.$mediaquery.'" ';
 					
 					//Start - generate srcset
@@ -66,6 +68,8 @@
 				}
 			} else {
 				foreach (self::getBreakpoints() as $breakpoint => $mediaquery) {
+					if ($breakpoint == 'fallback') continue;
+
 					$str .= '<source media="'.$mediaquery.'" ';
 					
 					//Start - generate srcset
