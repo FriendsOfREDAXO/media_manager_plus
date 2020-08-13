@@ -1,25 +1,16 @@
 <?php
 	class media_manager_plus_frontend extends media_manager_plus {
 		public static function generateBackgroundImage($selector, $mediatype, $filename, $filenamesByBreakpoint = []) {
-			//Start - define filename by breakpoint
-				$filenames = [];
-				foreach (self::getBreakpoints() as $breakpoint => $mediaquery) {
-					if (in_array($breakpoint, $filenamesByBreakpoint)) {
-						$filenames[$breakpoint] = $filenamesByBreakpoint[$breakpoint];
-					} else {
-						$filenames[$breakpoint] = $filename;
-					}
-				}
-			//End - define filename by breakpoint
+            $filenames = self::getFilenamesByBreakpoints($filename, $filenamesByBreakpoint);
 			
 			$str = '';
 			foreach (self::getBreakpoints() as $breakpoint => $mediaquery) {
 				foreach (self::getResolutions() as $resolution => $factor) {
 					if ($resolution == 'lazy') continue;
 					
-					$str .= '@media only screen and '.$mediaquery.' and (-webkit-min-device-pixel-ratio: '.intval($factor).'), only screen and (min--moz-device-pixel-ratio: '.intval($factor).'), only screen and '.$mediaquery.' and (-o-min-device-pixel-ratio: '.intval($factor).'/1), only screen and '.$mediaquery.' and (min-device-pixel-ratio: '.intval($factor).'), only screen and '.$mediaquery.' and (min-resolution: '.intval($factor * 96).'dpi), only screen and '.$mediaquery.' and (min-resolution: '.intval($factor).'dppx) {'.PHP_EOL;
+					$str .= '@media only screen and '.$mediaquery.' and (-webkit-min-device-pixel-ratio: '. (int)$factor .'), only screen and (min--moz-device-pixel-ratio: '. (int)$factor .'), only screen and '.$mediaquery.' and (-o-min-device-pixel-ratio: '. (int)$factor .'/1), only screen and '.$mediaquery.' and (min-device-pixel-ratio: '. (int)$factor .'), only screen and '.$mediaquery.' and (min-resolution: '. (int)($factor * 96) .'dpi), only screen and '.$mediaquery.' and (min-resolution: '. (int)$factor .'dppx) {'.PHP_EOL;
 					$str .= '  '.$selector.' {'.PHP_EOL;
-					$str .= '    background-image:url(index.php?rex_media_type='.$mediatype.'-'.$breakpoint.'@'.$resolution.'&rex_media_file='.$filenames[$breakpoint].');'.PHP_EOL;
+					$str .= '    background-image:url('.self::getPictureUrl($filenames[$breakpoint], $mediatype, $breakpoint.'@'.$resolution).');'.PHP_EOL;
 					$str .= '  }'.PHP_EOL;
 					$str .= '}'.PHP_EOL;
 				}
@@ -29,21 +20,10 @@
 		}
 		
 		public static function generatePictureTag($mediatype, $filename, $filenamesByBreakpoint = [], $lazyload = true) {
-			//Start - define filename by breakpoint
-				$filenames = [];
-				foreach (self::getBreakpoints() as $breakpoint => $mediaquery) {
-					if (in_array($breakpoint, $filenamesByBreakpoint)) {
-						$filenames[$breakpoint] = $filenamesByBreakpoint[$breakpoint];
-					} else {
-						$filenames[$breakpoint] = $filename;
-					}
-				}
-			//End - define filename by breakpoint
-			
-			$defaultImg = rex_url::media($filename);
+		    $filenames = self::getFilenamesByBreakpoints($filename, $filenamesByBreakpoint);
 			
 			$str = '';
-			$str  = rex_extension::registerPoint(new rex_extension_point('MMP_BEFORE_PICTURETAG', $str, ['mediatype' => $mediatype, 'filename' => $filename, 'filenamesByBreakpoint' => $filenamesByBreakpoint, 'lazyload' => boolval($lazyload)]));
+			$str  = rex_extension::registerPoint(new rex_extension_point('MMP_BEFORE_PICTURETAG', $str, ['mediatype' => $mediatype, 'filename' => $filename, 'filenamesByBreakpoint' => $filenamesByBreakpoint, 'lazyload' => (bool)$lazyload]));
 			$str .= '<picture>'.PHP_EOL;
 			
 			if (!$lazyload) {
@@ -59,7 +39,7 @@
 								continue;
 							}
 							
-							$str .= 'index.php?rex_media_type='.$mediatype.'-'.$breakpoint.'@'.$resolution.'&rex_media_file='.$filenames[$breakpoint].' '.$resolution.',';
+							$str .= self::getPictureUrl($filenames[$breakpoint], $mediatype, $breakpoint.'@'.$resolution).' '.$resolution.',';
 						}
 						$str = substr($str, 0, -1);
 					//End - generate srcset
@@ -74,7 +54,7 @@
 					
 					//Start - generate srcset
 						$str .= 'srcset="';
-						$str .= 'index.php?rex_media_type='.$mediatype.'-'.$breakpoint.'@lazy&rex_media_file='.$filenames[$breakpoint];
+						$str .= self::getPictureUrl($filenames[$breakpoint], $mediatype, $breakpoint.'@lazy');
 						$str .= '"';
 					//End - generate srcset
 					
@@ -85,7 +65,7 @@
 								continue;
 							}
 							
-							$str .= 'index.php?rex_media_type='.$mediatype.'-'.$breakpoint.'@'.$resolution.'&rex_media_file='.$filenames[$breakpoint].' '.$resolution.',';
+							$str .= self::getPictureUrl($filenames[$breakpoint], $mediatype, $breakpoint.'@'.$resolution).' '.$resolution.',';
 						}
 						$str = substr($str, 0, -1);
 					//End - generate data-srcset
@@ -98,18 +78,19 @@
 			
 			if ($lazyload) $classes[] = 'lazyload';
 
-			$classes = rex_extension::registerPoint(new rex_extension_point('MMP_IMG_CLASS', $classes, ['mediatype' => $mediatype, 'filename' => $filename, 'filenamesByBreakpoint' => $filenamesByBreakpoint, 'lazyload' => boolval($lazyload)]));
+			$classes = rex_extension::registerPoint(new rex_extension_point('MMP_IMG_CLASS', $classes, ['mediatype' => $mediatype, 'filename' => $filename, 'filenamesByBreakpoint' => $filenamesByBreakpoint, 'lazyload' => (bool)$lazyload]));
+			if(!is_array($classes))
+                throw new rex_exception('only array allowed at MMP_IMG_CLASS return value');
 
-			$imgtag = rex_extension::registerPoint(new rex_extension_point('MMP_IMGTAG', $imgtag, ['mediatype' => $mediatype, 'filename' => $filename, 'filenamesByBreakpoint' => $filenamesByBreakpoint, 'lazyload' => boolval($lazyload)]));
+			$imgtag = rex_extension::registerPoint(new rex_extension_point('MMP_IMGTAG', $imgtag, ['mediatype' => $mediatype, 'filename' => $filename, 'filenamesByBreakpoint' => $filenamesByBreakpoint, 'lazyload' => (bool)$lazyload, 'classes' => $classes]));
 
 			if ($imgtag == '') {
-
-				$imgSrcPath = 'index.php?rex_media_type='.$mediatype.'-fallback@1x'.'&rex_media_file='.$filename;
+			    $imgSrcPath = self::getPictureUrl($filename, $mediatype, 'fallback@1x');
 
 				$imgSrcSetPath = '';
 				foreach (self::getResolutions() as $resolution => $factor) {
 						if ($resolution == 'lazy') continue;
-						$imgSrcSetPath .= 'index.php?rex_media_type='.$mediatype.'-fallback@'.$resolution.''.'&rex_media_file='.$filename.' '.$resolution.',';
+						$imgSrcSetPath .= self::getPictureUrl($filename, $mediatype, 'fallback@'.$resolution).' '.$resolution.',';
 				}
 				$imgSrcSetPath = substr($imgSrcSetPath, 0, -1);
 
@@ -122,7 +103,7 @@
 					$imgLazySrcSet = '';
 
 				} else {
-					$imgSrcLazy = 'index.php?rex_media_type='.$mediatype.'-fallback@lazy'.'&rex_media_file='.$filename;
+					$imgSrcLazy = self::getPictureUrl($filename, $mediatype, 'fallback@lazy');
 
 					$imgSrc = $imgSrcLazy;
 					$imgLazySrc = ' data-src="'.$imgSrcPath.'"';
@@ -136,7 +117,7 @@
 
 				}
 
-				$imgtag = '	<img '.(sizeof($classes) > 0 ? 'class="'.implode(' ', $classes).'"' : '').' src="'.$imgSrc.'"'.$imgLazySrc.'srcset="'.$imgSrcSet.'"'.$imgLazySrcSet.' alt="'.addslashes(rex_media::get($filename)->getTitle()).'">'.PHP_EOL;
+				$imgtag = '	<img '.(count($classes) > 0 ? 'class="'.implode(' ', $classes).'"' : '').' src="'.$imgSrc.'"'.$imgLazySrc.'srcset="'.$imgSrcSet.'"'.$imgLazySrcSet.' alt="'.self::getAltString($filename).'">'.PHP_EOL;
 
 			}
 			
@@ -147,5 +128,43 @@
 			
 			return $str;
 		}
+
+		private static function getPictureUrl($filename, $mediatype, $group) {
+            if(rex_addon::get('media_manager_autorewrite')->isAvailable()) {
+                if(version_compare(rex::getVersion(), '5.7.0', '>=')) {
+                    $imgSrcPath = rex_media_manager::getUrl($mediatype.'-'.$group, $filename);
+                } else {
+                    $imgSrcPath = rex_media_manager::getUrl($mediatype.'-'.$group, $filename);
+                }
+            } else {
+                $imgSrcPath = 'index.php?rex_media_type=' . $mediatype . '-' . $group . '&rex_media_file=' . $filename;
+            }
+            return $imgSrcPath;
+        }
+
+		private static function getAltString($filename = '') {
+            $alt = '';
+            $alt = rex_extension::registerPoint(new rex_extension_point('MMP_IMG_ALT', $alt, ['filename' => $filename]));
+
+            if($alt !== '')
+                return $alt;
+
+		    if(!is_object(rex_media::get($filename)))
+		        return '';
+
+            return addslashes(rex_media::get($filename)->getTitle());
+        }
+
+        private static function getFilenamesByBreakpoints($filename, $filenamesByBreakpoint = []) {
+            $filenames = [];
+            foreach (self::getBreakpoints() as $breakpoint => $mediaquery) {
+                if (in_array($breakpoint, $filenamesByBreakpoint)) {
+                    $filenames[$breakpoint] = $filenamesByBreakpoint[$breakpoint];
+                } else {
+                    $filenames[$breakpoint] = $filename;
+                }
+            }
+            return $filenames;
+        }
 	}
 ?>

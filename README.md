@@ -44,6 +44,7 @@ Für die eigene Anpassung von Ausgaben, existieren folgende Extension Points
 - `MMP_AFTER_PICTURETAG`
 - `MMP_IMG_CLASS`
 - `MMP_IMGTAG`
+- `MMP_IMG_ALT`
 
 ### `MMP_BEFORE_PICTURETAG`
 
@@ -92,6 +93,10 @@ media_manager_plus_frontend::generatePictureTag('eigenerTyp', 'bild.jpg');
 ### `MMP_IMGTAG`
 
 ermöglicht eine eigene Ausgabe von dem tag "IMG". Es stehen die Parameter `mediatype`, `filename`, `filenamesByBreakpoint` und `lazyload` zur verfügung.
+
+### `MMP_IMG_ALT`
+
+über diesen Endpoint kann der wert des alt attributes durch einen eigenen Wert überschrieben werden.
 
 ## Requirements
 
