@@ -114,10 +114,11 @@ Du hast einen Fehler gefunden oder ein nettes Feature was du gerne hättest? [Le
 
 **Projekt-Lead**
 
-[Thomas Kaegi](https://github.com/phoebusryan)
-
+[Markus Schnieder](https://github.com/mschnieder)
 
 ## Credits:
+
+vorheriger Lead: [Thomas Kaegi](https://github.com/phoebusryan)
 
 Readme: [Markus Schnieder](https://github.com/mschnieder)
 
