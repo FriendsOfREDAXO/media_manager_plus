@@ -48,6 +48,8 @@
 			
 			if (!$lazyload) {
 				foreach (self::getBreakpoints() as $breakpoint => $mediaquery) {
+					if ($breakpoint == 'fallback') continue;
+					
 					$str .= '<source media="'.$mediaquery.'" ';
 					
 					//Start - generate srcset
@@ -66,6 +68,8 @@
 				}
 			} else {
 				foreach (self::getBreakpoints() as $breakpoint => $mediaquery) {
+					if ($breakpoint == 'fallback') continue;
+
 					$str .= '<source media="'.$mediaquery.'" ';
 					
 					//Start - generate srcset
@@ -93,11 +97,47 @@
 			$imgtag = '';
 			
 			if ($lazyload) $classes[] = 'lazyload';
+
 			$classes = rex_extension::registerPoint(new rex_extension_point('MMP_IMG_CLASS', $classes, ['mediatype' => $mediatype, 'filename' => $filename, 'filenamesByBreakpoint' => $filenamesByBreakpoint, 'lazyload' => boolval($lazyload)]));
+
 			$imgtag = rex_extension::registerPoint(new rex_extension_point('MMP_IMGTAG', $imgtag, ['mediatype' => $mediatype, 'filename' => $filename, 'filenamesByBreakpoint' => $filenamesByBreakpoint, 'lazyload' => boolval($lazyload)]));
-			
+
 			if ($imgtag == '') {
-				$imgtag = '	<img '.(sizeof($classes) > 0 ? 'class="'.implode(' ', $classes).'"' : '').' src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="'.addslashes(rex_media::get($filename)->getTitle()).'">'.PHP_EOL;
+
+				$imgSrcPath = 'index.php?rex_media_type='.$mediatype.'-fallback@1x'.'&rex_media_file='.$filename;
+
+				$imgSrcSetPath = '';
+				foreach (self::getResolutions() as $resolution => $factor) {
+						if ($resolution == 'lazy') continue;
+						$imgSrcSetPath .= 'index.php?rex_media_type='.$mediatype.'-fallback@'.$resolution.''.'&rex_media_file='.$filename.' '.$resolution.',';
+				}
+				$imgSrcSetPath = substr($imgSrcSetPath, 0, -1);
+
+				if (!$lazyload) {
+
+					$imgSrc = $imgSrcPath;
+					$imgSrcSet = $imgSrcSetPath;
+
+					$imgLazySrc = '';
+					$imgLazySrcSet = '';
+
+				} else {
+					$imgSrcLazy = 'index.php?rex_media_type='.$mediatype.'-fallback@lazy'.'&rex_media_file='.$filename;
+
+					$imgSrc = $imgSrcLazy;
+					$imgLazySrc = ' data-src="'.$imgSrcPath.'"';
+
+					$imgSrcSet = $imgSrcLazy;
+
+					$imgLazySrcSet = '';
+					$imgLazySrcSet .= ' data-srcset="';
+					$imgLazySrcSet .= $imgSrcSetPath;
+					$imgLazySrcSet .= '"'.PHP_EOL;
+
+				}
+
+				$imgtag = '	<img '.(sizeof($classes) > 0 ? 'class="'.implode(' ', $classes).'"' : '').' src="'.$imgSrc.'"'.$imgLazySrc.'srcset="'.$imgSrcSet.'"'.$imgLazySrcSet.' alt="'.addslashes(rex_media::get($filename)->getTitle()).'">'.PHP_EOL;
+
 			}
 			
 			$str .= $imgtag;
