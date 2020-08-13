@@ -134,7 +134,7 @@
                 if(version_compare(rex::getVersion(), '5.7.0', '>=')) {
                     $imgSrcPath = rex_media_manager::getUrl($mediatype.'-'.$group, $filename);
                 } else {
-                    $imgSrcPath = rex_media_manager::getUrl($mediatype.'-'.$group, $filename);
+                    $imgSrcPath = mm_auto::rewrite($mediatype.'-'.$group, $filename);
                 }
             } else {
                 $imgSrcPath = 'index.php?rex_media_type=' . $mediatype . '-' . $group . '&rex_media_file=' . $filename;
