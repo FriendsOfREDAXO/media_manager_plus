@@ -117,7 +117,7 @@
 
 				}
 
-				$imgtag = '	<img '.(count($classes) > 0 ? 'class="'.implode(' ', $classes).'"' : '').' src="'.$imgSrc.'"'.$imgLazySrc.'srcset="'.$imgSrcSet.'"'.$imgLazySrcSet.' alt="'.self::getAltString($filename).'">'.PHP_EOL;
+				$imgtag = '	<img '.(count($classes) > 0 ? 'class="'.implode(' ', $classes).'"' : '').' src="'.$imgSrc.'"'.$imgLazySrc.' srcset="'.$imgSrcSet.'"'.$imgLazySrcSet.' alt="'.self::getAltString($filename).'">'.PHP_EOL;
 
 			}
 			
