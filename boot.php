@@ -17,7 +17,7 @@
 								foreach ($breakpoints as $breakpoint => $mediaquery) {
 									$sql->setQuery('INSERT INTO '.$params['form']->getTableName().' (`status`, `name`, `description`, `group`, `subgroup`) VALUES (?,?,?,?,?)', ['0', $_POST[$params['form']->getName()]['name'].'-'.$breakpoint, 'generated [group '.$group_id.']', $group_id, 0]);
 									echo $sql->getError();
-									$subgroup_id = $params['sql']->getLastId();
+                                    $subgroup_id = $sql->getLastId();
 									foreach ($resolutions as $resolution => $factor) {
 										$sql->setQuery('INSERT INTO '.$params['form']->getTableName().' (`status`, `name`, `description`, `group`, `subgroup`) VALUES (?,?,?,?,?)', ['0', $_POST[$params['form']->getName()]['name'].'-'.$breakpoint.'@'.$resolution, 'generated [group '.$group_id.', subgroup '.$subgroup_id.']', $group_id, $subgroup_id]);
 										echo $sql->getError();
