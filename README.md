@@ -88,6 +88,9 @@ class beispiel {
 
 beispiel::setClass(['class-1', 'class-2', 'class-3'])
 media_manager_plus_frontend::generatePictureTag('eigenerTyp', 'bild.jpg');
+
+// Für nachfolgende Aufrufe ohne eigener Class, einfach danach den Standard festlegen
+beispiel::setClass(['standard_klasse']);
 ```
 
 ### `MMP_IMGTAG`
