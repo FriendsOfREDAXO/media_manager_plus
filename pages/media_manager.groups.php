@@ -106,7 +106,7 @@
 						$name .= '    </div>';
 						$name .= '  </header>';
 						$name .= '  <div id="collapse-type-'.$groupsByBreakpoint['id'].'-group-'.$groupsByBreakpoint['group'].'-subgroup-'.$groupsByBreakpoint['subgroup'].'" class="panel-collapse collapse">';
-						
+
 						$groupsByResolutions = $sql->getArray('SELECT * FROM `'.rex::getTablePrefix().'media_manager_type` WHERE `subgroup` = ?', [$groupsByBreakpoint['id']]);
 						if (!empty($groupsByResolutions)) {
 							$name .= '<ul class="list-group">';
