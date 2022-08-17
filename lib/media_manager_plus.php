@@ -1,5 +1,6 @@
 <?php
 	class media_manager_plus {
+        const LAZY_LOAD = 'lazysizes.min-5.3.2.js';
 		public static function getBreakpoints() {
 			$sql = rex_sql::factory();
 			$breakpoints = $sql->getArray("SELECT name, mediaquery FROM `".rex::getTablePrefix()."media_manager_plus_breakpoints` ORDER BY `name` ASC");
@@ -77,6 +78,10 @@
                 }
             }
             return $parameters;
+        }
+
+        public static function getLazyLoad() {
+            return '<script src="assets/addons/media_manager_plus/vendor/js/'.self::LAZY_LOAD.'" defer type="text/javascript"></script>';
         }
 	}
 ?>
