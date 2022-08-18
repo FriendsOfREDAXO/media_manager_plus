@@ -1,8 +1,8 @@
 <?php
 	$func = rex_request('func', 'string');
-	
+
 	if ($func == '') {
-		$list = rex_list::factory("SELECT `id`, `name`, `mediaquery` FROM `".rex::getTablePrefix()."media_manager_plus_breakpoints` ORDER BY `name` ASC");
+		$list = rex_list::factory("SELECT `id`, `name`, `mediaquery` FROM `".rex::getTablePrefix()."media_manager_plus_breakpoints` ORDER BY `prio` ASC");
 		$list->addTableAttribute('class', 'table-striped');
 		$list->setNoRowsMessage($this->i18n('breakpoints_norowsmessage'));
 		
@@ -28,17 +28,23 @@
 		echo $content;
 	} else if ($func == 'add' || $func == 'edit') {
 		$id = rex_request('id', 'int');
-		
+
+        $form = rex_form::factory(rex::getTablePrefix().'media_manager_plus_breakpoints', '', 'id='.$id);
+
 		if ($func == 'edit') {
 			$formLabel = $this->i18n('breakpoints_formcaption_edit');
 		} elseif ($func == 'add') {
 			$formLabel = $this->i18n('breakpoints_formcaption_add');
+            $form->setEditMode(false);
 		}
-		
-		$form = rex_form::factory(rex::getTablePrefix().'media_manager_plus_breakpoints', '', 'id='.$id);
+
+        $field = $form->addPrioField('prio');
+        $field->setLabel($this->i18n('breakpoints_label_prio'));
+        $field->setAttribute('class', 'selectpicker form-control');
+        $field->setLabelField('name');
 		
 		//Start - add name-field
-			$field = $form->addTextField('name');
+			$field = $form->addTextField('name', null, ($func == 'edit' ? ['readonly' => true]: []));
 			$field->setLabel($this->i18n('breakpoints_label_name'));
 		//End - add name-field
 		

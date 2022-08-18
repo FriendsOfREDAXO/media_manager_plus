@@ -93,9 +93,20 @@
 			//Start - get groups for this type
 				$sql = rex_sql::factory();
 				$groupsByBreakpoints = $sql->getArray('SELECT * FROM `'.rex::getTablePrefix().'media_manager_type` WHERE `group` = ? AND subgroup = 0', [$list->getValue('id')]);
-				
-				if (!empty($groupsByBreakpoints)) {
-					foreach ($groupsByBreakpoints as $groupsByBreakpoint) {
+
+                $breakpointOrder = $sql->getArray('Select name, prio from '.rex::getTablePrefix().'media_manager_plus_breakpoints order by prio');
+
+                $newGroupsByBreakpoint = [];
+                foreach($breakpointOrder as $bpO) {
+                    foreach($groupsByBreakpoints as $breakpoint) {
+                        if('-'.$bpO['name'] === substr($breakpoint['name'], (strlen($bpO['name']) * -1 - 1))) {
+                            $newGroupsByBreakpoint[] = $breakpoint;
+                        }
+                    }
+                }
+
+				if (!empty($newGroupsByBreakpoint)) {
+					foreach ($newGroupsByBreakpoint as $groupsByBreakpoint) {
 						$name .= '<div class="panel panel-default">';
 						$name .= '  <header class="panel-heading collapsed" data-toggle="collapse" data-target="#collapse-type-'.$groupsByBreakpoint['id'].'-group-'.$groupsByBreakpoint['group'].'-subgroup-'.$groupsByBreakpoint['subgroup'].'">';
 						$name .= '    <div class="panel-title">';

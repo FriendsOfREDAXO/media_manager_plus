@@ -3,7 +3,7 @@
 		rex_extension::register('REX_FORM_SAVED', function (rex_extension_point $ep) {
 			$params = $ep->getParams();
 			$formParams = $params['form']->getParams();
-			
+
 			switch ($formParams['page']) {
 				case 'media_manager/groups':
 					switch ($params['form']->isEditMode()) {
@@ -55,8 +55,54 @@
 						rex_response::sendRedirect(rex_url::backendPage('media_manager/singletypes'));
 					}
 				break;
+
+                case 'media_manager/breakpoints':
+                    // add Breakpoint
+                    if(!$params['form']->isEditMode()) {
+                        $sql = rex_sql::factory();
+                        $breakpoints = media_manager_plus::getBreakpoints();
+                        $resolutions = media_manager_plus::getResolutions();
+                        $groupEffects = $sql->getArray('Select * from '.rex::getTablePrefix().'media_manager_type where status = 0 and `group` = 0 and subgroup = 0');
+
+                        foreach($groupEffects as $group) {
+                            $first = true;
+                            $subgroupId = 0;
+                            foreach ($breakpoints as $breakpoint => $mediaquery) {
+                                if($_POST[$params['form']->getName()]['name'] === $breakpoint) {
+                                    $bp = $sql->getArray('Select id from '.rex::getTablePrefix().'media_manager_plus_breakpoints where `name` = ?', [$breakpoint]);
+                                    if($first) {
+                                        $first = false;
+                                        $sql->setQuery('Insert into '.rex::getTablePrefix().'media_manager_type (`status`, `name`, `description`, `group`, `subgroup`, `breakpointId`) VALUES (?,?,?,?,?,?)', [0, $group['name'].'-'.$breakpoint, 'generated [group '.$group['id'].']', $group['id'], $subgroupId, $bp[0]['id']]);
+                                        $subgroupId = (int)$sql->getLastId();
+                                    }
+                                    foreach ($resolutions as $resolution => $factor) {
+                                        $sql->setQuery('Insert into ' . rex::getTablePrefix() . 'media_manager_type (`status`, `name`, `description`, `group`, `subgroup`, `breakpointId`) VALUES (?,?,?,?,?,?)', [0, $group['name'].'-' . $breakpoint. '@' . $resolution, 'generated[group '.$group['id'].',subgroup '.$subgroupId.']', $group['id'], $subgroupId, $bp[0]['id']]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                break;
 			}
 		});
+
+        rex_extension::register('REX_FORM_DELETED', function (rex_extension_point $ep) {
+            $params = $ep->getParams();
+            $formParams = $params['form']->getParams();
+
+            switch ($formParams['page']) {
+                case 'media_manager/breakpoints':
+                    $sql = rex_sql::factory();
+                    $mmtIds = $sql->getArray('Select id from '.rex::getTablePrefix().'media_manager_type where breakpointId='.$formParams['id']);
+
+                    foreach($mmtIds as $mmtId) {
+                        $sql->setQuery('Delete from ' . rex::getTablePrefix() . 'media_manager_type_effect where type_id=' . $mmtId['id']);
+                    }
+
+                    $sql->setQuery("Delete from ".rex::getTablePrefix()."media_manager_type where breakpointId=".$formParams['id']);
+                    break;
+            }
+        });
 		
 		//Start - inject media_manager
 			if (rex_request::get('page') == 'media_manager/types' && rex_request::get('func') == 'copy' && rex_request::get('type_id') != '0') {

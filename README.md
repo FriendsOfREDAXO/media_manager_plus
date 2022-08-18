@@ -17,6 +17,12 @@ für ein Bild zu hinterlegen. Somit besteht die Möglichkeit, verschiedene Aufl�
 1. Über Installer laden oder ZIP-Datei im AddOn-Ordner entpacken, der Ordner muss `media_manager_plus` heißen.
 2. AddOn installieren und aktivieren
 
+## Hinweise
+### Löschen von Breakpoints
+Sorgt auch gleichzeitig dafür das alle Gruppen Breakpoints des Typs gelöscht werden, jedoch nicht für alt Einträge die bis vor der Version 2.3.0 angelegt wurden.
+
+### Anlegen von Breakpoints
+Ab Version 2.3.0 werden beim nachträglichen anlegen von Breakpoints, die entsprechenden Einträge für alle bestehenden Gruppen angelegt.
 
 ## Verwendung
 
