@@ -76,7 +76,7 @@ Ermöglicht vor dem Picture Tag eigene Ausgaben zu gestalten. Es stehen in dem E
 - `mediatype`
 - `filename`
 - `filenamesByBreakpoint`
-- `lazyload
+- `lazyload`
 
 ### `MMP_AFTER_PICTURETAG`
 
